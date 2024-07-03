@@ -1,6 +1,6 @@
 const express = require('express')
 const path = require('path')
-const api = require('./routes/notes.js')
+const api = require('./routes/notes')
 
 const app = express()
 const PORT = process.env.PORT || 3001
@@ -9,18 +9,18 @@ const PORT = process.env.PORT || 3001
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-// API routes
-app.use('/api', api)
-
 // Static files
 app.use(express.static('public'))
 
-// GET Route for notes page
+// API routes
+app.use('/api', api)
+
+// GET Route to display notes page
 app.get('/notes', (req, res) =>
   res.sendFile(path.join(__dirname, '/public/notes.html'))
 )
 
-// GET Route for homepage
+// GET Route to display main homepage
 app.get('*', (req, res) =>
   res.sendFile(path.join(__dirname, '/public/index.html'))
 )

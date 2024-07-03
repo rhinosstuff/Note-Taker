@@ -1,20 +1,20 @@
-const notes = require('express').Router()
-const { readFromFile, readAndAppend, readAndDelete } = require('../helpers/fsUtils')
-// Generates unique id's
+// uuid generates unique id's
 const { v4: uuidv4 } = require('uuid')
+const notes = require('express').Router()
+const { parseNotes, appendNote, deleteNote } = require('../helpers/fsUtils')
 
-// Request to read notes from db.json
+// GET request to display notes from db.json
 notes.get('/notes', async (req, res) => {
   console.info(`${req.method} request received for notes`)
   try {
-    const data = await readFromFile('db/db.json')
-    res.json(JSON.parse(data));
+    const parsedNotes = await parseNotes()
+    res.json(parsedNotes)
   } catch (err) {
     res.status(500).json({ error: 'Error reading notes' })
   }
 })
 
-// Request to write new note to db.json
+// POST request to append new note to db.json, checks to make sure title & text are valid
 notes.post('/notes', async (req, res) => {
   console.info(`${req.method} request received to add notes`)
   console.log(req.body)
@@ -27,9 +27,8 @@ notes.post('/notes', async (req, res) => {
       text,
       id: uuidv4()
     }
-
     try {
-      await readAndAppend(newNote);
+      await appendNote(newNote)
       res.status(201).json('Note added successfully');
     } catch (err) {
       res.status(500).json({ error: 'Error adding note' });
@@ -39,7 +38,7 @@ notes.post('/notes', async (req, res) => {
   }
 })
 
-// Delete request to delete a note
+// DELETE request to remove note from db.json based on id, checks to make sure id is valid
 notes.delete('/notes/:id', async (req, res) => {
   console.info(`${req.method} request received to remove note`)
   console.log(req.params)
@@ -48,7 +47,7 @@ notes.delete('/notes/:id', async (req, res) => {
 
   if (id) {
     try {
-      await readAndDelete(id);
+      await deleteNote(id)
       res.status(200).json('Note removed successfully')
     } catch (err) {
       res.status(500).json({ error: 'Error removing note' })

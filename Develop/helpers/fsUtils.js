@@ -1,31 +1,43 @@
 const fs = require('fs')
 const util = require('util')
-const notes = 'db/db.json'
+const notesArray = 'db/db.json'
 
-// Promise version of fs.readFile
+// Promise version of fs.readFile & fs.wtireFile, to allow (async and await) 
 const readFromFile = util.promisify(fs.readFile)
 const writeToFile = util.promisify(fs.writeFile)
 
-const readAndAppend = async (content) => {
+// Parses db.json for easy access from other functions
+const parseNotes = async () => {
+  const data = await readFromFile(notesArray, 'utf8')
+  let parsedNotes = []
+    
+  if (data) {
+    parsedNotes = JSON.parse(data) 
+  }
+
+  return parsedNotes
+}
+
+// Appends newNote to db.json  
+const appendNote = async (newNote) => {
   try {
-    const data = await readFromFile(notes, 'utf8')
-    const parsedData = JSON.parse(data)
-    parsedData.push(content)
-    await writeToFile(notes, JSON.stringify(parsedData, null, 4))
+    const parsedNotes = await parseNotes()
+    parsedNotes.push(newNote)
+    await writeToFile(notesArray, JSON.stringify(parsedNotes, null, 4))
   } catch (err) {
     console.error(err)
   }
 }
 
-const readAndDelete = async (id) => {
+// Deletes note based on id from db.json
+const deleteNote = async (id) => {
   try {
-    const data = await readFromFile(notes, 'utf8')
-    const parsedData = JSON.parse(data)
-    const filteredData = parsedData.filter((obj) => obj.id !== id)
-    await writeToFile(notes, JSON.stringify(filteredData, null, 4))
+    const parsedNotes = await parseNotes()
+    const filteredNotes = parsedNotes.filter((obj) => obj.id !== id)
+    await writeToFile(notesArray, JSON.stringify(filteredNotes, null, 4))
   } catch (err) {
     console.error(err)
   }
 }
 
-module.exports = { readFromFile, writeToFile, readAndAppend, readAndDelete }
+module.exports = { readFromFile, writeToFile, parseNotes, appendNote, deleteNote }
