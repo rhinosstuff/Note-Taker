@@ -1,6 +1,27 @@
 [
     {
-        "title":"Test Title",
-        "text":"Test text"
+        "title": "Car Wash",
+        "text": "Monday",
+        "id": "cab72224-496c-4f32-943b-64d216b0c39f"
+    },
+    {
+        "title": "Take Out Trash",
+        "text": "Tuesday",
+        "id": "b343ebd7-7efa-4de0-9bf4-3786e45e9972"
+    },
+    {
+        "title": "Walk The Dog",
+        "text": "8:00 a.m.",
+        "id": "a8fca4ce-052d-4b46-8f5f-2c25056cefe1"
+    },
+    {
+        "title": "Feed The Dog",
+        "text": "9:00 a.m.",
+        "id": "73a8a14a-d5e8-4597-956f-6862d22f9117"
+    },
+    {
+        "title": "Start Work",
+        "text": "10:00 a.m.",
+        "id": "297be937-5293-4740-a691-70db859173cd"
     }
 ]
